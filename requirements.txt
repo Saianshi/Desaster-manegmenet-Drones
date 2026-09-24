@@ -1,0 +1,6 @@
+numpy
+matplotlib
+
+# Optional, not required for the engine/simulation/evaluation:
+#   ffmpeg (external binary, not pip-installable) -- viz/animate.py uses it
+#   to export MP4; without it, an animated GIF is produced instead.

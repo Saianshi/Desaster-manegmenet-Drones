@@ -1,0 +1,188 @@
+<meta charset="utf-8">
+<title>Perimeter Ops View</title>
+<style>
+  :root { color-scheme: dark; }
+  body { background:#0d1117; color:#c9d1d9; font-family:-apple-system,Segoe UI,Roboto,sans-serif; margin:0; padding:20px; }
+  .header { display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #30363d; padding-bottom:14px; margin-bottom:18px; }
+  .header h1 { font-size:20px; margin:0; letter-spacing:0.5px; color:#e6edf3; }
+  .clock { font-size:28px; font-weight:700; color:#58a6ff; font-variant-numeric:tabular-nums; }
+  .stat-row { display:flex; gap:18px; }
+  .stat { background:#161b22; border:1px solid #30363d; border-radius:8px; padding:8px 16px; text-align:center; min-width:90px; }
+  .stat .n { font-size:22px; font-weight:700; }
+  .stat .l { font-size:11px; color:#8b949e; text-transform:uppercase; letter-spacing:0.5px; }
+  .stat.rescued .n { color:#3fb950; }
+  .stat.dead .n { color:#f85149; }
+  .stat.alive .n { color:#d29922; }
+  .grid { display:grid; grid-template-columns:520px 1fr; gap:20px; }
+  .panel { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:16px; }
+  .panel h2 { font-size:13px; text-transform:uppercase; letter-spacing:0.8px; color:#8b949e; margin:0 0 12px 0; }
+  .map-img { width:100%; border-radius:6px; display:block; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; color:#8b949e; font-size:11px; text-transform:uppercase; letter-spacing:0.4px; padding:6px 8px; border-bottom:1px solid #30363d; }
+  td { padding:7px 8px; border-bottom:1px solid #1c2128; }
+  td.rank { color:#58a6ff; font-weight:700; }
+  td.team { font-weight:600; color:#e6edf3; }
+  td.urgent { color:#f85149; font-weight:700; }
+  tr.reason-row td.reason { color:#8b949e; font-size:11.5px; font-style:italic; padding:0 8px 10px 8px; border-bottom:1px solid #1c2128; }
+  .zone-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:12.5px; }
+  .zone-pos { width:110px; color:#8b949e; font-variant-numeric:tabular-nums; }
+  .zone-bar-bg { flex:1; height:10px; background:#21262d; border-radius:5px; overflow:hidden; }
+  .zone-bar { height:100%; background:linear-gradient(90deg,#f0883e,#f85149); }
+  .zone-risk { width:36px; text-align:right; color:#f85149; font-weight:600; }
+  .legend { font-size:11px; color:#8b949e; margin-top:10px; line-height:1.6; }
+  .footer-note { font-size:11px; color:#6e7681; margin-top:18px; text-align:center; }
+</style>
+<div class="header">
+  <div>
+    <h1>DISASTER RESPONSE - PERIMETER OPERATIONS VIEW</h1>
+    <div class="stat-row" style="margin-top:10px;">
+      <div class="stat rescued"><div class="n">9</div><div class="l">Rescued</div></div>
+      <div class="stat alive"><div class="n">149</div><div class="l">At risk</div></div>
+      <div class="stat dead"><div class="n">40</div><div class="l">Lost</div></div>
+    </div>
+  </div>
+  <div class="clock">T+02:06</div>
+</div>
+<div class="grid">
+  <div class="panel">
+    <h2>Live Situational Map</h2>
+    <img class="map-img" src="charts/responder_view_map.png" alt="situational map">
+    <div class="legend">
+      &#9650; drone (green = has backhaul, red = disconnected) &nbsp;&bull;&nbsp;
+      &#9733; base station &nbsp;&bull;&nbsp; &#9632;&#9670;&#10010; resource units<br>
+      Coloured dot = detected cluster (colour = confidence) &nbsp;&bull;&nbsp;
+      Red square = suspected silent zone &nbsp;&bull;&nbsp; Blue tint = flooded
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Ranked Action List</h2>
+    <table>
+      <tr><th>#</th><th>Team</th><th>Target</th><th>ETA</th><th>Grp</th><th>Survival Window</th><th>Equipment</th><th>Conf.</th></tr>
+      
+        <tr>
+          <td class="rank">1</td>
+          <td class="team">Excavator r1 + Medical r2</td>
+          <td>🏚 belief_236</td>
+          <td>4 min</td>
+          <td>8</td>
+          <td class="">4.1 h</td>
+          <td>excavator, medical</td>
+          <td>85%</td>
+        </tr>
+        <tr class="reason-row"><td></td><td colspan="7" class="reason">&#8618; Excavator r1 + Medical r2 -> belief_236 (243 min window, 5 min travel, value=4.63) over farther belief_173 (243 min window, value=3.41); belief_173 would no longer be reachable this round.</td></tr>
+        
+        <tr>
+          <td class="rank">2</td>
+          <td class="team">Boat r0</td>
+          <td>🌊 belief_248</td>
+          <td>6 min</td>
+          <td>6</td>
+          <td class="">6.7 h</td>
+          <td>boat</td>
+          <td>61%</td>
+        </tr>
+        <tr class="reason-row"><td></td><td colspan="7" class="reason">&#8618; Boat r0 -> belief_248 (403 min window, 8 min travel, value=3.62) over nearer belief_243 (403 min window, value=2.84); belief_243 would no longer be reachable this round.</td></tr>
+        
+        <tr>
+          <td class="rank">3</td>
+          <td class="team">Boat r3</td>
+          <td>🌊 belief_220</td>
+          <td>0 min</td>
+          <td>3</td>
+          <td class="">6.4 h</td>
+          <td>boat</td>
+          <td>34%</td>
+        </tr>
+        <tr class="reason-row"><td></td><td colspan="7" class="reason">&#8618; Boat r3 -> belief_220 (407 min window, 9 min travel, value=2.19) over nearer belief_80 (333 min window, value=2.05); belief_80 would no longer be reachable this round.</td></tr>
+        
+    </table>
+  </div>
+</div>
+<div class="grid" style="grid-template-columns:520px 1fr; margin-top:20px;">
+  <div class="panel">
+    <h2>Suspected Silent Zones (25)</h2>
+    
+        <div class="zone-row">
+          <span class="zone-pos">(1025, 875)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:100%"></div></div>
+          <span class="zone-risk">1.00</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(155, 775)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:95%"></div></div>
+          <span class="zone-risk">0.95</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(615, 265)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:94%"></div></div>
+          <span class="zone-risk">0.95</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(1555, 845)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:94%"></div></div>
+          <span class="zone-risk">0.95</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(605, 95)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:94%"></div></div>
+          <span class="zone-risk">0.95</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(125, 1965)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:94%"></div></div>
+          <span class="zone-risk">0.95</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(1475, 735)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:94%"></div></div>
+          <span class="zone-risk">0.95</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(645, 345)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:94%"></div></div>
+          <span class="zone-risk">0.94</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(1315, 1665)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:94%"></div></div>
+          <span class="zone-risk">0.94</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(1725, 95)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:93%"></div></div>
+          <span class="zone-risk">0.94</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(1895, 1695)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:93%"></div></div>
+          <span class="zone-risk">0.93</span>
+        </div>
+        
+        <div class="zone-row">
+          <span class="zone-pos">(1815, 345)</span>
+          <div class="zone-bar-bg"><div class="zone-bar" style="width:93%"></div></div>
+          <span class="zone-risk">0.93</span>
+        </div>
+        
+    <div class="legend">High prior population, scanned, zero detections: either empty, or everyone there is too trapped to signal.</div>
+  </div>
+  <div class="panel">
+    <h2>Notes</h2>
+    <div class="legend" style="font-size:12px; line-height:1.8;">
+      Icons: 🏚 buried &nbsp; 🌊 rooftop/flood &nbsp; 🚶 street<br>
+      "Reason" lines are the engine's own comparative justification for each dispatch, generated at decision time -- not added after the fact.<br>
+      This view reflects the engine's OWN belief state: noisy, uncertain, and occasionally wrong. Ground truth is never shown here, matching what the engine itself has to work with.
+    </div>
+  </div>
+</div>
+<div class="footer-note">Generated by viz/responder_view.py from output/run_log.json, frame 252, seed 42</div>

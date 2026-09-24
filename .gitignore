@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.claude/
+
+# Large generated artifacts -- regenerate locally via the scripts in
+# simulation/ and viz/ rather than versioning multi-hundred-MB output.
+# The curated, presentation-sized results (charts, results.json,
+# decision_trace.*, responder_view.html) ARE kept, below.
+output/run_log.json
+output/frames/
+output/run_animation.gif
+output/eval_checkpoint_full.json
+output/eval_checkpoint_quick.json

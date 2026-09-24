@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1860 420" width="100%" height="auto">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#8b949e"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1860" height="420" fill="#0d1117"/>
+  <text x="930.0" y="45" text-anchor="middle" font-size="22" font-weight="700" fill="#e6edf3" font-family="Segoe UI, Arial, sans-serif">From a victim's phone to a dispatched rescuer -- the whole data path</text>
+  <text x="930.0" y="72" text-anchor="middle" font-size="13" fill="#8b949e" font-family="Segoe UI, Arial, sans-serif">Every hop after "Victim BLE mesh" is comms-denied and unreliable by design -- the engine only ever sees what survives this chain.</text>
+
+  <rect x="20" y="170" width="210" height="100" rx="12" fill="#161b22" stroke="#3fb950" stroke-width="2"/>
+  <rect x="20" y="170" width="210" height="6" rx="3" fill="#3fb950"/>
+  <text x="125.0" y="210" text-anchor="middle" font-size="17" font-weight="700" fill="#e6edf3" font-family="Segoe UI, Arial, sans-serif">Victim BLE mesh</text>
+  <text x="125.0" y="234" text-anchor="middle" font-size="11.5" fill="#8b949e" font-family="Segoe UI, Arial, sans-serif"><tspan x="125.0" dy="0">phone/wearable beacon, no cell network needed</tspan></text>
+
+  <rect x="270" y="170" width="210" height="100" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+  <rect x="270" y="170" width="210" height="6" rx="3" fill="#58a6ff"/>
+  <text x="375.0" y="210" text-anchor="middle" font-size="17" font-weight="700" fill="#e6edf3" font-family="Segoe UI, Arial, sans-serif">Drone portable cell</text>
+  <text x="375.0" y="234" text-anchor="middle" font-size="11.5" fill="#8b949e" font-family="Segoe UI, Arial, sans-serif"><tspan x="375.0" dy="0">thermal + UWB + RF pick up the beacon</tspan></text>
+
+  <rect x="520" y="170" width="230" height="100" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+  <rect x="520" y="170" width="230" height="6" rx="3" fill="#58a6ff"/>
+  <text x="635.0" y="210" text-anchor="middle" font-size="17" font-weight="700" fill="#e6edf3" font-family="Segoe UI, Arial, sans-serif">Drone-to-drone backhaul</text>
+  <text x="635.0" y="234" text-anchor="middle" font-size="11.5" fill="#8b949e" font-family="Segoe UI, Arial, sans-serif"><tspan x="635.0" dy="0">multi-hop relay when no direct line to base</tspan></text>
+
+  <rect x="790" y="170" width="200" height="100" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+  <rect x="790" y="170" width="200" height="6" rx="3" fill="#58a6ff"/>
+  <text x="890.0" y="210" text-anchor="middle" font-size="17" font-weight="700" fill="#e6edf3" font-family="Segoe UI, Arial, sans-serif">Base station</text>
+  <text x="890.0" y="234" text-anchor="middle" font-size="11.5" fill="#8b949e" font-family="Segoe UI, Arial, sans-serif"><tspan x="890.0" dy="0">aggregates all drone traffic, fixed position</tspan></text>
+
+  <rect x="1030" y="170" width="240" height="100" rx="12" fill="#161b22" stroke="#bc8cff" stroke-width="2"/>
+  <rect x="1030" y="170" width="240" height="6" rx="3" fill="#bc8cff"/>
+  <text x="1150.0" y="210" text-anchor="middle" font-size="17" font-weight="700" fill="#e6edf3" font-family="Segoe UI, Arial, sans-serif">Belief fusion</text>
+  <text x="1150.0" y="234" text-anchor="middle" font-size="11.5" fill="#8b949e" font-family="Segoe UI, Arial, sans-serif"><tspan x="1150.0" dy="0">engine/belief.py -- noisy detections -> one</tspan><tspan x="1150.0" dy="16">confidence-weighted VictimBelief per victim</tspan></text>
+
+  <rect x="1310" y="170" width="250" height="100" rx="12" fill="#161b22" stroke="#f0883e" stroke-width="2"/>
+  <rect x="1310" y="170" width="250" height="6" rx="3" fill="#f0883e"/>
+  <text x="1435.0" y="210" text-anchor="middle" font-size="17" font-weight="700" fill="#e6edf3" font-family="Segoe UI, Arial, sans-serif">Triage scheduler</text>
+  <text x="1435.0" y="234" text-anchor="middle" font-size="11.5" fill="#8b949e" font-family="Segoe UI, Arial, sans-serif"><tspan x="1435.0" dy="0">engine/scheduler.py -- survival-aware value,</tspan><tspan x="1435.0" dy="16">cascade bonus, rescuer risk, greedy assignment</tspan></text>
+
+  <rect x="1600" y="170" width="220" height="100" rx="12" fill="#161b22" stroke="#3fb950" stroke-width="2"/>
+  <rect x="1600" y="170" width="220" height="6" rx="3" fill="#3fb950"/>
+  <text x="1710.0" y="210" text-anchor="middle" font-size="17" font-weight="700" fill="#e6edf3" font-family="Segoe UI, Arial, sans-serif">Responder view</text>
+  <text x="1710.0" y="234" text-anchor="middle" font-size="11.5" fill="#8b949e" font-family="Segoe UI, Arial, sans-serif"><tspan x="1710.0" dy="0">dispatched resource + human-readable</tspan><tspan x="1710.0" dy="16">decision trace for the crew on scene</tspan></text>
+
+  <line x1="230" y1="220.0" x2="270" y2="220.0" stroke="#8b949e" stroke-width="2.5" marker-end="url(#arrow)"/>
+  
+
+  <line x1="480" y1="220.0" x2="520" y2="220.0" stroke="#8b949e" stroke-width="2.5" marker-end="url(#arrow)"/>
+  
+
+  <line x1="750" y1="220.0" x2="790" y2="220.0" stroke="#8b949e" stroke-width="2.5" marker-end="url(#arrow)"/>
+  
+
+  <line x1="990" y1="220.0" x2="1030" y2="220.0" stroke="#8b949e" stroke-width="2.5" marker-end="url(#arrow)"/>
+  
+
+  <line x1="1270" y1="220.0" x2="1310" y2="220.0" stroke="#8b949e" stroke-width="2.5" marker-end="url(#arrow)"/>
+  
+
+  <line x1="1560" y1="220.0" x2="1600" y2="220.0" stroke="#8b949e" stroke-width="2.5" marker-end="url(#arrow)"/>
+  
+
+  <path d="M 1685.0 270 C 1685.0 325, 1115.0 325, 1115.0 270"
+        fill="none" stroke="#f0883e" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow)"/>
+  <text x="1400.0" y="343" text-anchor="middle" font-size="11.5" fill="#f0883e"
+        font-family="Segoe UI, Arial, sans-serif" font-style="italic">field report on wrong-resource-type: crew radios back what they actually found -- treated as authoritative, overrides remote-sensor classification</text>
+
+  <text x="30" y="405" font-size="11" fill="#8b949e" font-family="Segoe UI, Arial, sans-serif">/engine never imports /simulation and never sees ground truth -- only Detection objects that made it through this chain.</text>
+</svg>

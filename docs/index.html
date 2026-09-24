@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Disaster Response Decision Engine</title>
+<style>
+  :root { color-scheme: dark; }
+  body { background:#0d1117; color:#c9d1d9; font-family:-apple-system,Segoe UI,Roboto,sans-serif;
+         margin:0; padding:0 20px 60px; }
+  .wrap { max-width:980px; margin:0 auto; }
+  header { padding:48px 0 24px; border-bottom:1px solid #30363d; }
+  h1 { font-size:30px; margin:0 0 8px; color:#e6edf3; }
+  .sub { color:#8b949e; font-size:16px; line-height:1.6; max-width:720px; }
+  h2 { font-size:18px; color:#58a6ff; margin:40px 0 14px; text-transform:uppercase; letter-spacing:0.6px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:18px; }
+  .card { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:16px; }
+  .card img { width:100%; border-radius:6px; display:block; margin-bottom:10px; background:#0d1117; }
+  .card h3 { font-size:14px; margin:0 0 6px; color:#e6edf3; }
+  .card p { font-size:12.5px; color:#8b949e; margin:0; line-height:1.5; }
+  a.button { display:inline-block; background:#238636; color:white; text-decoration:none;
+             padding:10px 18px; border-radius:6px; font-size:14px; font-weight:600; margin:4px 8px 4px 0; }
+  a.button.secondary { background:#21262d; border:1px solid #30363d; }
+  .stat-row { display:flex; gap:16px; margin:20px 0; flex-wrap:wrap; }
+  .stat { background:#161b22; border:1px solid #30363d; border-radius:8px; padding:14px 20px; }
+  .stat .n { font-size:26px; font-weight:700; color:#58a6ff; }
+  .stat .l { font-size:11px; color:#8b949e; text-transform:uppercase; }
+  .finding { background:#161b22; border-left:3px solid #f0883e; border-radius:0 8px 8px 0; padding:14px 18px; margin-bottom:14px; font-size:13.5px; line-height:1.6; }
+  .finding.good { border-left-color:#3fb950; }
+  .finding.null { border-left-color:#8b949e; }
+  footer { color:#6e7681; font-size:12px; text-align:center; margin-top:50px; }
+  a { color:#58a6ff; }
+  .story { counter-reset:step; margin:20px 0 30px; }
+  .step { display:grid; grid-template-columns:40px 1fr; gap:14px; margin-bottom:16px; }
+  .step .num { counter-increment:step; background:#21262d; border:1px solid #30363d; border-radius:50%;
+               width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+               font-weight:700; color:#58a6ff; font-size:14px; }
+  .step .num::before { content: counter(step); }
+  .step .body { font-size:13.5px; line-height:1.6; padding-top:5px; }
+  .step .body strong { color:#e6edf3; }
+  table.compare { width:100%; border-collapse:collapse; margin:16px 0; font-size:13px; }
+  table.compare th { text-align:left; color:#8b949e; font-size:11px; text-transform:uppercase;
+                      padding:8px 12px; border-bottom:1px solid #30363d; }
+  table.compare td { padding:8px 12px; border-bottom:1px solid #1c2128; }
+  table.compare td.num { font-variant-numeric:tabular-nums; color:#e6edf3; }
+  table.compare tr.highlight td { color:#58a6ff; font-weight:600; }
+  .player-frame { width:100%; height:900px; border:1px solid #30363d; border-radius:10px; background:#0b0e14; }
+  .player-note { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; margin:8px 0 18px; }
+  .player-note p { color:#8b949e; font-size:12.5px; margin:0; max-width:640px; line-height:1.5; }
+  .arch-card { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:16px; overflow-x:auto; }
+  .arch-card img { display:block; min-width:760px; width:100%; }
+  .card .caption { display:block; margin-top:6px; padding-top:6px; border-top:1px dashed #30363d; color:#58a6ff; font-size:11.5px; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Disaster Response Decision Engine</h1>
+    <p class="sub">A decision-support engine for earthquake + urban flash-flood response, built
+    around one hard constraint: all comms infrastructure is destroyed. Drones are the only
+    sensors; the engine never sees ground truth, only noisy detections it has to fuse itself.</p>
+    <div style="margin-top:18px;">
+      <a class="button" href="responder_view.html">Open the responder dashboard &rarr;</a>
+      <a class="button secondary" href="https://github.com/Saianshi/Desaster-manegmenet-Drones">View source on GitHub</a>
+    </div>
+  </header>
+
+  <h2>Headline result (100-seed evaluation)</h2>
+  <div class="stat-row">
+    <div class="stat"><div class="n">50.0</div><div class="l">Engine: people rescued (mean)</div></div>
+    <div class="stat"><div class="n">4.5</div><div class="l">Naive baseline (mean)</div></div>
+    <div class="stat"><div class="n">~11x</div><div class="l">Engine advantage over naive baseline</div></div>
+  </div>
+
+  <h2>Watch it happen</h2>
+  <div class="player-note">
+    <p>Baseline (nearest-first) left, our engine right, same seed, same clock, playing live on canvas.
+    Grey victims are undetected; colour runs green (safe) &rarr; red (imminent) once found. Flood water
+    rises as a translucent layer over the true elevation map. Drones turn red when they lose backhaul to
+    base. Press play, or jump straight to the moment the two strategies' rescue counts first split apart
+    and read the engine's own dispatch reasoning for it.</p>
+    <a class="button secondary" href="player.html" target="_blank" rel="noopener">Open full-screen &rarr;</a>
+  </div>
+  <iframe class="player-frame" src="player.html" title="Response player" loading="lazy"></iframe>
+
+  <h2>How we got here (the honest version)</h2>
+  <div class="story">
+    <div class="step"><div class="num"></div><div class="body">
+      <strong>Our first evaluation showed the engine losing</strong> to a much simpler baseline.
+      An "informed operator" (real belief fusion + correct resource-type matching, but zero
+      survival scoring, cascade bonus, or connectivity-aware routing) out-rescued the full
+      engine on average, 56.9 vs 49.0 people. That's a real result from a real run, not staged.
+    </div></div>
+    <div class="step"><div class="num"></div><div class="body">
+      <strong>We diagnosed it instead of tuning around it.</strong> Instrumenting every dispatched
+      mission showed <strong>&gt;97% were failing</strong>, mostly a fixed 50m search radius
+      missing victims whose belief position was routinely 40-60m off, and wrong-type dispatches
+      (a boat sent to a buried victim) that could repeat forever with nothing learned. At that
+      failure rate, <em>which target you pick barely matters</em>, raw dispatch volume dominates
+      the outcome, which is exactly why the simpler, faster-dispatching baseline was winning.
+    </div></div>
+    <div class="step"><div class="num"></div><div class="body">
+      <strong>Two realism fixes, justified as "what real responders do," not as tuning:</strong>
+      search radius now scales with the belief's own reported uncertainty (and costs real time
+      proportional to the area searched, so a vague fix costs more than a precise one); and a
+      wrong-type failure now generates a field report (the crew radios back what they actually
+      found), correcting the belief instead of letting the same wrong dispatch repeat.
+    </div></div>
+    <div class="step"><div class="num"></div><div class="body">
+      <strong>With missions actually succeeding, the picture changed.</strong> Per-mission success
+      rate rose <strong>5.6x</strong> for the full engine (1.6% &rarr; 8.9%) and 6.4x for the
+      informed-operator baseline. The engine/baseline gap, which was real and sizeable before,
+      closed to statistical noise. Two of the engine's three scoring features started showing a
+      measurable, correctly-directioned effect for the first time; re-run at 100 seeds specifically
+      to check whether that held up under more data. It didn't, for one of them, see below.
+    </div></div>
+  </div>
+
+  <h2>Before &rarr; after (same evaluation methodology, mission resolution fixed)</h2>
+  <table class="compare">
+    <tr><th></th><th>Before fix (30 seeds)</th><th>After fix (100 seeds)</th></tr>
+    <tr><td>Full engine</td><td class="num">49.03 &plusmn; 16.56</td><td class="num">49.98 &plusmn; 14.88</td></tr>
+    <tr><td>Informed operator</td><td class="num">56.90 &plusmn; 22.68</td><td class="num">49.94 &plusmn; 15.75</td></tr>
+    <tr class="highlight"><td>Engine vs informed operator (paired t)</td><td class="num">-</td><td class="num">t = +0.02 (47W/47L/6T, a coin flip)</td></tr>
+    <tr><td>Full-engine mission success rate</td><td class="num">1.6%</td><td class="num">8.9% (5.6x)</td></tr>
+  </table>
+
+  <div class="finding null">
+    <strong>Cascade bonus: reported as a null result, not spun.</strong> At 30 seeds it
+    looked promising (paired t = +1.60, favourable on 19/30 seeds). We didn't stop there: we
+    re-ran at 100 seeds specifically to test whether that would hold up, and it didn't,
+    <strong>t dropped to +0.26</strong> (53/44 split, essentially a coin flip). The 30-seed signal
+    was sampling noise, not a real effect. This project's headline novel idea, after two
+    independent fixes to the mechanism it depends on, still shows no measurable aggregate benefit.
+  </div>
+  <div class="finding">
+    <strong>Rescuer risk: borderline, not proven.</strong> Moved from t=+1.54 (30 seeds) to
+    <strong>t=+1.92</strong> (100 seeds), right at the edge of conventional significance
+    (p&asymp;0.057, just short of the usual 1.96 threshold), with 47 of 100 seeds tied exactly
+    (the penalty often doesn't change which candidate wins at all). Suggestive, not conclusive.
+  </div>
+  <div class="finding null">
+    <strong>Silence-as-signal: still no effect.</strong> t=-1.14 at 100 seeds, if
+    anything trending slightly negative. No positive contribution found.
+  </div>
+
+  <h2>Architecture: from a victim's phone to a dispatched rescuer</h2>
+  <div class="arch-card">
+    <img src="charts/architecture.svg" alt="architecture diagram: victim BLE mesh to drone portable cell to drone-to-drone backhaul to base station to belief fusion to triage scheduler to responder view">
+  </div>
+
+  <h2>Supporting evidence</h2>
+  <div class="grid">
+    <div class="card">
+      <img src="charts/lives_saved_baseline_vs_ours.png" alt="lives saved chart">
+      <h3>Lives saved, baseline vs engine</h3>
+      <p>The N=100 headline number as a bar chart.</p>
+      <span class="caption">Look for: the ~11x arrow, informed operator and full engine are statistically tied with each other, both far above pure baseline.</span>
+    </div>
+    <div class="card">
+      <img src="charts/ablation.png" alt="ablation chart">
+      <h3>Ablation study</h3>
+      <p>Each engine feature (cascade bonus, silence-as-signal, rescuer risk) toggled on/off, 100 seeds each.</p>
+      <span class="caption">Look for: the t-stat printed above each grey bar, that's the paired significance test, not the bar height.</span>
+    </div>
+    <div class="card">
+      <img src="charts/sensitivity.png" alt="sensitivity chart">
+      <h3>Resource-scarcity sensitivity</h3>
+      <p>How the advantage over baseline changes from scarce (3) to plentiful (40) resources.</p>
+      <span class="caption">Look for: the green double-arrow marking where the engine/baseline gap is widest.</span>
+    </div>
+    <div class="card">
+      <img src="charts/coverage_curve.png" alt="coverage curve">
+      <h3>Discovery coverage over time</h3>
+      <p>Victim groups discovered, connectivity-aware orchestrator vs a fixed lawnmower sweep.</p>
+      <span class="caption">Look for: the dotted marker showing when the engine crosses 90% of victims found.</span>
+    </div>
+    <div class="card">
+      <img src="charts/mortality_curve_no_rescue.png" alt="mortality curve">
+      <h3>No-rescue mortality curves</h3>
+      <p>Buried (crush syndrome, hours-scale) vs rooftop (steep drop as flood water arrives).</p>
+      <span class="caption">Look for: the labelled "flood water arrives" point, where the rooftop curve breaks steep.</span>
+    </div>
+    <div class="card">
+      <img src="charts/network_graph_before_after.png" alt="network graph">
+      <h3>Drone backhaul network</h3>
+      <p>Detected clusters and backhaul connectivity, early vs late in an 8-hour run.</p>
+      <span class="caption">Look for: the connected (green) vs broken (red) drone count in each panel's title.</span>
+    </div>
+    <div class="card">
+      <img src="charts/stills/still_divergence.png" alt="animation still">
+      <h3>Side-by-side animation (rendered video)</h3>
+      <p>Baseline vs engine, same seed, matplotlib-rendered still frames.</p>
+      <span class="caption">Look for: the live, playable version above under "Watch it happen", this is the exported fallback. <a href="run_animation.gif">Full GIF</a>.</span>
+    </div>
+  </div>
+
+  <h2>Documents</h2>
+  <p>
+    <a href="decision_trace.pdf">Decision trace (PDF)</a>, chronological rescue log with
+    the engine's own comparative reasoning for each dispatch &nbsp;|&nbsp;
+    <a href="decision_trace.md">same, as Markdown</a>
+  </p>
+
+  <footer>Generated by the project's viz/ layer from a seeded, reproducible simulation run. See the repository README for the full architecture and how to reproduce every number here.</footer>
+</div>
+</body>
+</html>
