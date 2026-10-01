@@ -1,3 +1,9 @@
+## License
+
+© 2026 Saianshi Mohapatra. All rights reserved.
+
+This code is shared only so people can see my work. Please don't copy, reuse or redistribute it without asking me first. If you'd like to use any part of it, feel free to reach out at saianshimohapatraofficial@gmail.com.
+
 # Disaster Response Decision Engine
 
 A decision-support engine for earthquake + urban flash-flood response, built for a hackathon
